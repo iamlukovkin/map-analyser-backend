@@ -1,5 +1,6 @@
 package com.geo.entity.keys;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
@@ -22,5 +23,6 @@ public class FeatureInH3Key implements Serializable {
     private Long h3Id;
 
     @Column(name = "date_of")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateOf;
 }

@@ -26,7 +26,8 @@ public class FeatureLayerService {
 
     @CacheEvict(cacheNames = "featureLayers", allEntries = true)
     public void create(FeatureLayerModel model) {
-        repository.save(mapper.apply(model));
+        var layer = mapper.apply(model);
+        repository.save(layer);
     }
 
     @Cacheable(cacheNames = "featureLayer", key = "#id", unless = "#result == null")

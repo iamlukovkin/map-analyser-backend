@@ -25,10 +25,4 @@ public class Feature {
 
     @Column(name = "located_name")
     private String locatedName;
-
-    @OneToMany(mappedBy = "feature", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JsonManagedReference
-    private List<FeatureInH3> featureInH3s;
-
-
 }

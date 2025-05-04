@@ -25,6 +25,12 @@ public class FeatureInH3 {
     @JsonBackReference
     private Feature feature;
 
+    @MapsId("h3Id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "h3_id")
+    @JsonBackReference
+    private H3 h3;
+
     @Column(name = "feature_measurement")
     private Integer featureMeasurement;
 
