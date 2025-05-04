@@ -1,5 +1,6 @@
 package com.geo.controller.crud;
 
+import com.geo.model.FeatureLayerModel;
 import com.geo.model.ProductModel;
 import com.geo.service.ProductService;
 import jakarta.persistence.EntityNotFoundException;
@@ -64,6 +65,35 @@ public class ProductsController {
             return ResponseEntity.ok(service.readAll());
         } catch (Exception e) {
             System.out.println(e.getMessage());
+            return ResponseEntity.internalServerError().build();
+        }
+    }
+
+    @PostMapping("/add_layer")
+    public ResponseEntity<String> addLayerToProduct(@RequestParam Long productId, @RequestParam Long layerId) {
+        try {
+            service.addLayer(layerId, productId);
+            return ResponseEntity.ok("Layer added to product successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/delete-layer")
+    public ResponseEntity<String> deleteLayerFromProduct(@RequestParam Long productId, @RequestParam Long layerId) {
+        try {
+            service.deleteLayer(layerId, productId);
+            return ResponseEntity.ok("Layer deleted from product successfully.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/layers")
+    public ResponseEntity<List<FeatureLayerModel>> readAllLayers(@RequestParam Long productId) {
+        try {
+            return ResponseEntity.ok(service.getLayersOfProduct(productId));
+        } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
     }

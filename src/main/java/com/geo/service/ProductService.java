@@ -1,9 +1,14 @@
 package com.geo.service;
 
+import com.geo.entity.keys.LayerInProductKey;
+import com.geo.model.FeatureLayerModel;
 import com.geo.model.ProductModel;
+import com.geo.repository.LayerInProductRepository;
 import com.geo.repository.ProductRepository;
+import com.geo.util.FeatureLayerModelMapper;
 import com.geo.util.ProductMapper;
 import com.geo.util.ProductModelMapper;
+import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
@@ -22,10 +27,34 @@ public class ProductService {
     private final ProductRepository repository;
     private final ProductMapper mapper;
     private final ProductModelMapper modelMapper;
+    private final LayerInProductRepository layerInProductRepository;
 
     @CacheEvict(cacheNames = "products", allEntries = true)
     public void create(ProductModel model) {
         repository.save(mapper.apply(model));
+    }
+
+    public void addLayer(Long layerId, Long productId) {
+        boolean existsById = layerInProductRepository.existsById(new LayerInProductKey(layerId, productId));
+        if  (existsById) {
+            throw new EntityExistsException("Product with id " + productId + " already contains layer with id " + layerId);
+        }
+        layerInProductRepository.addLayerToProduct(productId, layerId);
+    }
+
+    public void deleteLayer(Long layerId, Long productId) {
+        boolean exists = layerInProductRepository.existsById(new LayerInProductKey(layerId, productId));
+        if (!exists) {
+            throw new EntityNotFoundException("Product with id " + productId + " has no layer with id " + layerId);
+        }
+        layerInProductRepository.deleteById(new LayerInProductKey(layerId, productId));
+    }
+
+    public List<FeatureLayerModel> getLayersOfProduct(Long productId) {
+        return layerInProductRepository.getLayerInProduct(productId)
+                .stream()
+                .map(new FeatureLayerModelMapper())
+                .collect(Collectors.toList());
     }
 
     @Cacheable(cacheNames = "product", key = "#id", unless = "#result == null")
@@ -36,10 +65,7 @@ public class ProductService {
 
     @Cacheable(cacheNames = "products")
     public List<ProductModel> readAll() {
-        return repository.findAll()
-                .stream()
-                .map(modelMapper)
-                .collect(Collectors.toList());
+        return repository.findAll().stream().map(modelMapper).collect(Collectors.toList());
     }
 
     @CacheEvict(cacheNames = "products", allEntries = true)
@@ -52,8 +78,7 @@ public class ProductService {
         repository.save(newEntity);
     }
 
-    @Caching(evict = {@CacheEvict(cacheNames = "product", key = "#id"),
-            @CacheEvict(cacheNames = "products", allEntries = true)})
+    @Caching(evict = {@CacheEvict(cacheNames = "product", key = "#id"), @CacheEvict(cacheNames = "products", allEntries = true)})
     public void delete(Long id) throws EntityNotFoundException {
         if (!repository.existsById(id)) {
             throw entityNotFoundException(id);
