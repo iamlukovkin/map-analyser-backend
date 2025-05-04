@@ -63,6 +63,7 @@ public class ProductsController {
         try {
             return ResponseEntity.ok(service.readAll());
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return ResponseEntity.internalServerError().build();
         }
     }

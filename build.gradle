@@ -25,6 +25,13 @@ repositories {
 
 dependencies {
 
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version: '3.4.5'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
+
+    // https://mvnrepository.com/artifact/redis.clients/jedis
+    implementation group: 'redis.clients', name: 'jedis', version: '6.0.0'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mockito:mockito-core'
     testImplementation 'com.fasterxml.jackson.core:jackson-databind'
