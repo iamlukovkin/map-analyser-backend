@@ -18,8 +18,8 @@ public class FeatureInH3Key implements Serializable {
     @Column(name = "feature_id")
     private Long featureId;
 
-    @Column(name = "h3_hex_index", length = 16)
-    private String h3HexIndex;
+    @Column(name = "h3_id")
+    private Long h3Id;
 
     @Column(name = "date_of")
     private LocalDateTime dateOf;

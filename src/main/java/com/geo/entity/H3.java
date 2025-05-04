@@ -15,6 +15,9 @@ import lombok.NoArgsConstructor;
 public class H3 {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @Column(name = "hex_index")
     private String hexIndex;
 
