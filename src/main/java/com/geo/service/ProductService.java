@@ -36,7 +36,7 @@ public class ProductService {
 
     public void addLayer(Long layerId, Long productId) {
         boolean existsById = layerInProductRepository.existsById(new LayerInProductKey(layerId, productId));
-        if  (existsById) {
+        if (existsById) {
             throw new EntityExistsException("Product with id " + productId + " already contains layer with id " + layerId);
         }
         layerInProductRepository.addLayerToProduct(productId, layerId);
