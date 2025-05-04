@@ -17,6 +17,7 @@ public class ProductModel implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    private Long id;
     private String fullName;
     private String description;
     private Double price;

@@ -11,6 +11,7 @@ public class FeatureLayerModelMapper implements Function<FeatureLayer, FeatureLa
     @Override
     public FeatureLayerModel apply(FeatureLayer featureLayer) {
         return FeatureLayerModel.builder()
+                .id(featureLayer.getId())
                 .fullName(featureLayer.getFullName())
                 .regionId(featureLayer.getRegionId())
                 .build();

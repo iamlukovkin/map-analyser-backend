@@ -11,6 +11,7 @@ public class ProductMapper implements Function<ProductModel, Product> {
     @Override
     public Product apply(ProductModel productModel) {
         return Product.builder()
+                .id(productModel.getId())
                 .fullName(productModel.getFullName())
                 .price(productModel.getPrice())
                 .description(productModel.getDescription())
