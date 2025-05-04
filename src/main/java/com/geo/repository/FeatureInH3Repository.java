@@ -16,7 +16,7 @@ import java.util.List;
 public interface FeatureInH3Repository extends JpaRepository<FeatureInH3, FeatureInH3Key> {
 
     @Query("""
-select new com.geo.model.calculate.H3YearlyModel(
+select new com.geo.model.H3YearlyModel(
     year(fih.featureInH3Key.dateOf),
     avg(fih.featureMeasurement),
     fih.feature.id,
