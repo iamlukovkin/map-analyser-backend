@@ -4,7 +4,7 @@ import com.geo.entity.Feature;
 import com.geo.entity.FeatureInH3;
 import com.geo.entity.H3;
 import com.geo.entity.keys.FeatureInH3Key;
-import com.geo.model.calculate.H3YearlyModel;
+import com.geo.model.H3YearlyModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,4 +1,4 @@
-package com.geo.model.calculate;
+package com.geo.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

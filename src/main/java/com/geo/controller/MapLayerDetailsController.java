@@ -1,6 +1,6 @@
-package com.geo.controller.map;
+package com.geo.controller;
 
-import com.geo.model.calculate.H3YearlyModel;
+import com.geo.model.H3YearlyModel;
 import com.geo.service.MapDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
