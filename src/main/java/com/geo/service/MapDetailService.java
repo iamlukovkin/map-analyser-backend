@@ -7,7 +7,6 @@ import com.geo.repository.FeatureRepository;
 import com.geo.repository.GeoRegionRepository;
 import com.geo.repository.H3Repository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +20,6 @@ public class MapDetailService {
     private final H3Repository h3Repository;
     private final FeatureInH3Repository featureInH3Repository;
 
-    @Cacheable(value = "featureInH3ByLayer", key = "#layerId + '_' + #hexSize")
     public List<H3YearlyModel> getByLayerId(Long layerId, Long hexSize) {
         var features = featureRepository.findFeaturesByLayerId(layerId);
         var geoRegion = geoRegionRepository.findGeoRegionByFeatureLayerId(layerId);
