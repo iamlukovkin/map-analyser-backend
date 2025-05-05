@@ -2,10 +2,7 @@ package com.geo.service;
 
 import com.geo.entity.Feature;
 import com.geo.model.H3YearlyModel;
-import com.geo.repository.FeatureInH3Repository;
-import com.geo.repository.FeatureRepository;
-import com.geo.repository.GeoRegionRepository;
-import com.geo.repository.H3Repository;
+import com.geo.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -30,5 +27,4 @@ public class MapDetailService {
         );
         return featureInH3Repository.findMatchedRelationsOf(hexes, features);
     }
-
 }

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -36,6 +37,10 @@ public class FeatureLayer {
             joinColumns = @JoinColumn(name = "feature_id"),
             inverseJoinColumns = @JoinColumn(name = "layer_id")
     )
-    private List<Feature> features;
+    private List<Feature> features = new ArrayList<>();
+
+    @OneToMany
+    @JoinColumn(name = "layer_id", referencedColumnName = "id")
+    private List<FeatureInLayer> featureInLayers = new ArrayList<>();
 
 }
