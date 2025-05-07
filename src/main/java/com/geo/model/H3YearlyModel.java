@@ -20,4 +20,5 @@ public class H3YearlyModel {
     @JsonProperty("h3")
     private String h3;
 
+
 }
