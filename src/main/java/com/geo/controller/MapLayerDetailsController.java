@@ -2,7 +2,7 @@ package com.geo.controller;
 
 import com.geo.mapper.H3YearlyModelMapper;
 import com.geo.model.LayerMapModel;
-import com.geo.service.FeatureLayerService;
+import com.geo.model.LayersAndAreasModel;
 import com.geo.service.MapDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +19,6 @@ import java.util.List;
 public class MapLayerDetailsController {
 
     private final MapDetailService service;
-    private final FeatureLayerService featureLayerService;
     private final H3YearlyModelMapper mapper;
 
     @GetMapping("areas")
@@ -31,8 +30,13 @@ public class MapLayerDetailsController {
         return map;
     }
 
-    @GetMapping("layers")
+    @GetMapping("list-layers")
     public List<LayerMapModel> findLayersOfProduct(@RequestParam Long productId) {
-        return featureLayerService.findLayersOfProduct(productId);
+        return service.findLayersOfProduct(productId);
+    }
+
+    @GetMapping("layers")
+    public LayersAndAreasModel findLayersAndAreas(@RequestParam("product") Long productId, @RequestParam("hex_size") Long hexSize) {
+        return service.findLayersAndAreas(productId, hexSize);
     }
 }

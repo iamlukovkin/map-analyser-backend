@@ -1,11 +1,19 @@
 package com.geo.service;
 
 import com.geo.entity.Feature;
+import com.geo.entity.H3;
+import com.geo.mapper.H3YearlyModelMapper;
+import com.geo.mapper.LayerMapModelMapper;
+import com.geo.model.FeatureMapModel;
 import com.geo.model.H3YearlyModel;
+import com.geo.model.LayerMapModel;
+import com.geo.model.LayersAndAreasModel;
 import com.geo.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,15 +24,47 @@ public class MapDetailService {
     private final GeoRegionRepository geoRegionRepository;
     private final H3Repository h3Repository;
     private final FeatureInH3Repository featureInH3Repository;
+    private final FeatureLayerRepository featureLayerRepository;
+    private final H3YearlyModelMapper mapper;
 
     public List<H3YearlyModel> getByLayerId(Long layerId, Long hexSize) {
         var features = featureRepository.findFeaturesByLayerId(layerId);
         var geoRegion = geoRegionRepository.findGeoRegionByFeatureLayerId(layerId);
+        List<Long> featureIds = features.stream()
+                .map(Feature::getId)
+                .collect(Collectors.toList());
         var hexes = h3Repository.findH3ByRegionIdAndFeatures(
                 geoRegion.getId(),
-                features.stream().map(Feature::getId).collect(Collectors.toList()),
-                hexSize
-        );
-        return featureInH3Repository.findMatchedRelationsOf(hexes, features);
+                featureIds,
+                hexSize);
+        return featureInH3Repository.findMatchedRelationsOf(hexes, featureIds);
+    }
+
+    public LayersAndAreasModel findLayersAndAreas(Long productId, Long hexSize) {
+        List<LayerMapModel> layers = findLayersOfProduct(productId);
+        List<Long> features = layers.stream()
+                .flatMap(model -> model.getFeatures().stream())
+                .map(FeatureMapModel::getId)
+                .distinct()
+                .collect(Collectors.toList());
+        List<Long> layerIds = layers.stream()
+                .map(LayerMapModel::getId)
+                .collect(Collectors.toList());
+        List<H3> hexes = h3Repository.findH3ByLayerIdsAndHexSize(
+                geoRegionRepository.findRegionsByLayerIds(layerIds),
+                features,
+                hexSize);
+        HashMap<String, HashMap<Long, HashMap<Integer, Double>>> map = new HashMap<>();
+        mapper.setSourceMap(map);
+        featureInH3Repository.findMatchedRelationsOf(hexes, features)
+                .forEach(relation -> map.put(relation.getH3(), mapper.apply(relation)));
+        return new LayersAndAreasModel(layers, map);
+    }
+
+    public List<LayerMapModel> findLayersOfProduct(@RequestParam Long productId) {
+        var layers = featureLayerRepository.findByProductId(productId);
+        return layers.stream()
+                .map(new LayerMapModelMapper())
+                .toList();
     }
 }

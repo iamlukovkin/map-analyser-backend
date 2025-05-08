@@ -1,6 +1,5 @@
 package com.geo.repository;
 
-import com.geo.entity.Feature;
 import com.geo.entity.FeatureInH3;
 import com.geo.entity.H3;
 import com.geo.entity.keys.FeatureInH3Key;
@@ -23,10 +22,10 @@ public interface FeatureInH3Repository extends JpaRepository<FeatureInH3, Featur
                 fih.h3.hexIndex)
             from FeatureInH3 fih
             where fih.h3 in :hexes
-                and fih.feature in :features
+                and fih.feature.id in :features
             group by year(fih.featureInH3Key.dateOf),
             fih.feature.id,
             fih.h3.hexIndex
             """)
-    List<H3YearlyModel> findMatchedRelationsOf(@Param("hexes") List<H3> hexes, @Param("features") List<Feature> features);
+    List<H3YearlyModel> findMatchedRelationsOf(@Param("hexes") List<H3> hexes, @Param("features") List<Long> features);
 }
