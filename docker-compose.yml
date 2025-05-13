@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: geo-surf-spring
+    container_name: geosurf_spring
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
