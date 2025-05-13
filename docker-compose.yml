@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  geo-surf-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: geo-surf-spring
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SSL_PATH: ${DB_SSL_PATH}
+    volumes:
+      - ./ssl:/app/ssl:ro
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
