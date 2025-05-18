@@ -12,7 +12,6 @@ services:
       DB_NAME: ${DB_NAME}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
-      DB_SSL_PATH: ${DB_SSL_PATH}
     volumes:
       - ./ssl:/app/ssl:ro
     ports:

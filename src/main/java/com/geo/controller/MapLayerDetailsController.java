@@ -39,4 +39,5 @@ public class MapLayerDetailsController {
     public LayersAndAreasModel findLayersAndAreas(@RequestParam("product") Long productId, @RequestParam("hex_size") Long hexSize) {
         return service.findLayersAndAreas(productId, hexSize);
     }
+
 }

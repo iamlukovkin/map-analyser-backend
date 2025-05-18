@@ -6,11 +6,6 @@ spring:
     url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:postgres}
     username: ${DB_USERNAME:postgres}
     password: ${DB_PASSWORD:postgres}
-    hikari:
-      data-source-properties:
-        ssl: true
-        sslmode: verify-full
-        sslrootcert: ${DB_SSL_PATH:~/.postgresql/root.crt}
   jpa:
     show-sql: true
     hibernate:

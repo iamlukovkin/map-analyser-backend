@@ -38,28 +38,46 @@ public class MapDetailService {
                 featureIds,
                 hexSize);
         return featureInH3Repository.findMatchedRelationsOf(hexes, featureIds);
+
+    }
+
+    public List<H3YearlyModel> findYearlyByProductAndHexSize(Long productId, Long hexSize) {
+        return featureInH3Repository.findYearlyByProductAndHexSize(productId, hexSize);
     }
 
     public LayersAndAreasModel findLayersAndAreas(Long productId, Long hexSize) {
+        // Получаем слои продукта
         List<LayerMapModel> layers = findLayersOfProduct(productId);
-        List<Long> features = layers.stream()
-                .flatMap(model -> model.getFeatures().stream())
-                .map(FeatureMapModel::getId)
-                .distinct()
-                .collect(Collectors.toList());
+
+        // Список id всех слоев
         List<Long> layerIds = layers.stream()
                 .map(LayerMapModel::getId)
-                .collect(Collectors.toList());
-        List<H3> hexes = h3Repository.findH3ByLayerIdsAndHexSize(
-                geoRegionRepository.findRegionsByLayerIds(layerIds),
-                features,
-                hexSize);
-        HashMap<String, HashMap<Long, HashMap<Integer, Double>>> map = new HashMap<>();
+                .toList();
+
+        // Получаем список регионов по слоям (уникальные regionId)
+        List<Long> regionIds = geoRegionRepository.findRegionsByLayerIds(layerIds);
+
+        // Собираем уникальные id фич из всех слоев
+        List<Long> features = layers.stream()
+                .flatMap(layer -> layer.getFeatures().stream())
+                .map(FeatureMapModel::getId)
+                .distinct()
+                .toList();
+
+        // Получаем все H3 объекты по регионам, фичам и размеру гексагона
+        List<H3> hexes = h3Repository.findH3ByLayerIdsAndHexSize(regionIds, features, hexSize);
+
+        // Инициализация мапы и сеттер для mapper
+        var map = new HashMap<String, HashMap<Long, HashMap<Integer, Double>>>();
         mapper.setSourceMap(map);
+
+        // Заполняем map данными
         featureInH3Repository.findMatchedRelationsOf(hexes, features)
                 .forEach(relation -> map.put(relation.getH3(), mapper.apply(relation)));
+
         return new LayersAndAreasModel(layers, map);
     }
+
 
     public List<LayerMapModel> findLayersOfProduct(@RequestParam Long productId) {
         var layers = featureLayerRepository.findByProductId(productId);
